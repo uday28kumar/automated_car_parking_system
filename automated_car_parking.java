@@ -39,16 +39,16 @@ class AutomatedCarParker {
     minHeap();
   }
 
-  private void minHeap() {
-    for (int i = ((vsSize - 1) / 2); i >= 0; i--) {
-      minHeapify(i);
-    }
-  }
-
   private void initilizeOccupiedSlots() {
     occupiedSlots = new Car[totalNumberOfSlots];
     for (int i = 0; i < totalNumberOfSlots; i++) {
       occupiedSlots[i] = null;
+    }
+  }
+
+  private void minHeap() {
+    for (int i = ((vsSize - 1) / 2); i >= 0; i--) {
+      minHeapify(i);
     }
   }
 
@@ -93,6 +93,21 @@ class AutomatedCarParker {
     return slotNumber;
   }
 
+  public void updateOccupiedSlots(int slot, Car car) {
+    if (slot == -1)
+      return;
+
+    if (car == null)
+      updateVacantSlots(slot);
+    occupiedSlots[slot] = car;
+  }
+
+  public int allotSlot(Car car) {
+    int allotedSlot = getFirstVacantSlot();
+    updateOccupiedSlots(allotedSlot, car);
+    return allotedSlot;
+  }
+
   public void createSlot(int n) {
     totalNumberOfSlots = n;
     initilizeVacantSlots();
@@ -111,21 +126,6 @@ class AutomatedCarParker {
       current = (current - 1) / 2;
     }
     vsSize++;
-  }
-
-  public void updateOccupiedSlots(int slot, Car car) {
-    if (slot == -1)
-      return;
-
-    if (car == null)
-      updateVacantSlots(slot);
-    occupiedSlots[slot] = car;
-  }
-
-  public int allotSlot(Car car) {
-    int allotedSlot = getFirstVacantSlot();
-    updateOccupiedSlots(allotedSlot, car);
-    return allotedSlot;
   }
 
   public void displayStatus() {
